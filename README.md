@@ -26,5 +26,3 @@ Instrucciones para ejecutar:
 2. Extraer los archivos
 3. Estando en la carpeta descomprinida, dar clic derecho y escojer la opccion de "Ejecutar en Terminal"
 4. En la terminal, escribir "dotnet run", luego dar clic
-2. 
-  
