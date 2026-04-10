@@ -81,6 +81,9 @@ public class MainScreen
         var nombre = AnsiConsole.Ask<string>("Nombre:");
         var apellido = AnsiConsole.Ask<string>("Apellido:");
         var tel = AnsiConsole.Ask<string>("Teléfono:");
+        var empresa = AnsiConsole.Ask<string>("Empresa (opcional):");
+        var puesto = AnsiConsole.Ask<string>("Puesto (opcional):");
+        var email = AnsiConsole.Ask<string>("Email (opcional):");
         
         var cats = _service.ListarCategorias().ToList();
         var cat = AnsiConsole.Prompt(
