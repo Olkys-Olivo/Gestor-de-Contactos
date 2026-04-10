@@ -25,7 +25,6 @@ class ContacRepository(AppDbContext context) {
   public int Update(string title, string year, string isbn, int id) {
     var book = _context.Books.Find(id);
 
-    // Es porque el libro existe
     if (book is null) return 0;
 
     book.Title = title;
