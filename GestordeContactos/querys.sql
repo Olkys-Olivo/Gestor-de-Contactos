@@ -1,36 +1,29 @@
 CREATE TABLE Contacto(
-    ID_Contacto INTEGER PRIMARY KEY,
-    Nombre TEXT NOT NULL,
-    Apellido TEXT NOT NULL,
-    Empresa TEXT,
-    Telefono TEXT NOT NULL,
-    Puesto TEXT,
-    Gmail TEXT,
-    Es_Favorito INTEGER NOT NULL,
-    Fecha_Creacion TEXT DEFAULT (datetime('now')),
-    Nota TEXT
+ID_Contacto INT PRIMARY KEY,
+Nombre VARCHAR(20) NOT NULL,
+Apellido VARCHAR(30) NOT NULL,
+Empresa VARCHAR(50) NULL,
+Telefono VARCHAR (10) NOT NULL,
+Puesto VARCHAR(15) NULL,
+Gmail VARCHAR(30) NULL,
+Es_Favorito BOOLEAN NOT NULL,
+Fecha_Creacion VARCHAR(10) NOT NULL,
+Nota VARCHAR NULL
 );
 
-INSERT INTO Contacto 
-(ID_Contacto, Nombre, Apellido, Empresa, Telefono, Puesto, Gmail, Es_Favorito, Nota)
-VALUES
-(2, 'Perez', 'Cesar', 'Cesar Iglesias', '8298338999', NULL, NULL, 1, NULL);
 
-INSERT INTO Contacto 
-(ID_Contacto, Nombre, Apellido, Empresa, Telefono, Puesto, Gmail, Es_Favorito, Nota)
-VALUES
-(1, 'Juan', 'Castro', NULL, '8298383939', NULL, NULL, 0, NULL);
+INSERT INTO Contacto VALUES(2, 'Perez', 'Cesar', 'Cesar Iglesias', '8298338999', NULL , NULL, TRUE , '29/03/2026', NULL);
 
-INSERT INTO Contacto 
-(ID_Contacto, Nombre, Apellido, Empresa, Telefono, Puesto, Gmail, Es_Favorito, Nota)
-VALUES
-(3, 'Richard', 'Peguero', NULL, '8298323459', NULL, NULL, 1, NULL);
+INSERT INTO Contacto VALUES(1, 'Juan', 'Castro', NULL, '8298383939', NULL , NULL, FALSE , '30/03/2026', NULL);
 
-CREATE TABLE Categoria(
-ID_Categoria INTEGER PRIMARY KEY,
-Nombre TEXT (20) NOT NULL,
-Descripcion TEXT (20) NULL
+INSERT INTO Contacto VALUES(3, 'Richard', 'Peguero', NULL, '8298323459', NULL , NULL, TRUE , '30/03/2026', NULL);
+
+
+CREATE TABLE CATEGORIA(
+ID_Categoria INT PRIMARY KEY,
+Nombre VARCHAR(20) NOT NULL,
+Descripcion VARCHAR(20) NULL
 );
 
-INSERT INTO Categoria VALUES(0, 'NO FAVORITOS', NULL);
-INSERT INTO Categoria VALUES(1, 'FAVORITOS', NULL);
+INSERT INTO CATEGORIA VALUES(1, 'FAVORITOS', NULL);
+INSERT INTO CATEGORIA VALUES(2, 'NO FAVORITOS', NULL);

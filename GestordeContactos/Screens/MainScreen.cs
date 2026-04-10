@@ -57,9 +57,9 @@ public class MainScreen
         }
     }
 
-    private void RenderTable(IEnumerable<Contacto> contactos, string titulo)
+    private void RenderTable(IEnumerable<Contacto> contactos, string Contactos)
     {
-        var table = new Table().Title($"[DarkOrange3]{titulo}[/]");
+        var table = new Table().Title($"[DarkOrange3]{Contactos}[/]");
         table.AddColumn("ID");
         table.AddColumn("Nombre");
         table.AddColumn("Teléfono");
