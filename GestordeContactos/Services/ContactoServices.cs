@@ -3,9 +3,19 @@ using GestordeContactos.Repositories;
 
 namespace GestordeContactos.Services;
 
-public class ContactoService(ContactoRepository contactoRepository)
+public class ContactoService
 {
-    private readonly ContactoRepository _contactoRepository = contactoRepository;
+    private readonly ContactoRepository _contactoRepository;
+
+    public ContactoService()
+        : this(new ContactoRepository())
+    {
+    }
+
+    public ContactoService(ContactoRepository contactoRepository)
+    {
+        _contactoRepository = contactoRepository;
+    }
 
     public List<Contacto> ObtenerTodos()
     {
@@ -42,6 +52,3 @@ public class ContactoService(ContactoRepository contactoRepository)
         return _contactoRepository.Actualizar(contacto);
     }
 }
-
-
-

@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Sqlite;
 using GestordeContactos.Models;
 
 namespace GestordeContactos.Data;
+
 
 public class AppDbContext : DbContext
 {
@@ -25,7 +27,7 @@ public class AppDbContext : DbContext
         {
             // Prefer an environment variable for the connection string to avoid hard-coded values.
             var conn = Environment.GetEnvironmentVariable("CONNECTION_STRING")
-                       ?? "Data Source=contacts.db";
+                        ?? "Data Source=contacts.db";
             optionsBuilder.UseSqlite(conn);
         }
     }
