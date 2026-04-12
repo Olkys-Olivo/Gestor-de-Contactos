@@ -1,76 +1,104 @@
-using Contactocase.Models;
-using Contactocase.Database;
+using GestordeContactos.Data;
+using GestordeContactos.Models;
+using Microsoft.EntityFrameworkCore;
 
-class ContactoRepository(AppDbContext context)
+namespace GestordeContactos.Repositories;
+
+public class ContactoRepository
 {
-  private readonly AppDbContext _context = context;
- 
-  public List<ContactoModel> SelectAll()
-  {
-    return _context.Contactos.ToList();
-  }
-
-  public int Delete(int ID_Contacto)
-  {
-    var contacto = _context.Contactos.Find(ID_Contacto);
-
-    if (contacto is null) return 0;
-
-    _context.Contactos.Remove(contacto);
-    return _context.SaveChanges();
-  }
-
-  public int Insert(string Nombre, string Apellido, string? Empresa, string Telefono, string? Puesto, string? Gmail, bool Es_Favorito, string? Nota)
-  {
-    var contacto = new ContactoModel
+    public List<Contacto> ObtenerTodos()
     {
-      Nombre = Nombre,
-      Apellido = Apellido,
-      Empresa = Empresa,
-      Telefono = Telefono,
-      Puesto = Puesto,
-      Gmail = Gmail,
-      Es_Favorito = Es_Favorito,
-      Nota = Nota
-    };
+        using var db = new AppDbContext();
+        return db.Contactos.Include(c => c.Categoria).ToList();
+    }
 
-    _context.Contactos.Add(contacto);
-    return _context.SaveChanges();
-  }
+    public List<Contacto> ObtenerPorFavorito(bool esFavorito)
+    {
+        using var db = new AppDbContext();
+        return db.Contactos
+            .Include(c => c.Categoria)
+            .Where(c => c.EsFavorito == esFavorito)
+            .ToList();
+    }
 
-  public int Update(string Nombre, string Apellido, string? Empresa, string Telefono, string? Puesto, string? Gmail, bool Es_Favorito, string Fecha_Creacion, string? Nota, int ID_Contacto)
-  {
-    var contacto = _context.Contactos.Find(ID_Contacto);
+    public List<Contacto> Buscar(string query)
+    {
+        using var db = new AppDbContext();
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            return ObtenerTodos();
+        }
 
-    if (contacto is null) return 0;
+        query = query.Trim().ToLowerInvariant();
 
-    contacto.Nombre = Nombre;
-    contacto.Apellido = Apellido;
-    contacto.Empresa = Empresa;
-    contacto.Telefono = Telefono;
-    contacto.Puesto = Puesto;
-    contacto.Gmail = Gmail;
-    contacto.Es_Favorito = Es_Favorito;
-    contacto.Fecha_Creacion = Fecha_Creacion;
-    contacto.Nota = Nota;
+        return db.Contactos
+            .Include(c => c.Categoria)
+            .Where(c => c.Nombre.ToLower().Contains(query)
+                     || c.Apellido.ToLower().Contains(query)
+                     || c.Telefono.ToLower().Contains(query)
+                     || c.Email != null && c.Email.ToLower().Contains(query)
+                     || c.Puesto != null && c.Puesto.ToLower().Contains(query)
+                     || c.Empresa != null && c.Empresa.ToLower().Contains(query)
+                     || c.Categoria.Nombre.ToLower().Contains(query))
+            .ToList();
+    }
 
-    return _context.SaveChanges();
-  }
-   public List<ContactoModel> Buscarnombre(string Nombre) {
-    return _context.Contactos
-      .Where(c => c.Nombre.Contains(Nombre))
-      .ToList();
-  }
+    public List<Categoria> ObtenerCategorias()
+    {
+        using var db = new AppDbContext();
 
-  public List<ContactoModel> GetFavoritos() {
-    return _context.Contactos
-      .Where(c => c.Es_Favorito)
-      .ToList();
-  }
+        if (!db.Categorias.Any())
+        {
+            db.Categorias.AddRange(
+                new Categoria { Nombre = "Personal", Descripcion = "Contactos personales" },
+                new Categoria { Nombre = "Trabajo", Descripcion = "Contactos laborales" },
+                new Categoria { Nombre = "Familia", Descripcion = "Contactos familiares" }
+            );
+            db.SaveChanges();
+        }
 
-  public List<ContactoModel> GetNoFavoritos() {
-    return _context.Contactos
-      .Where(c => !c.Es_Favorito)
-      .ToList();
-  }
+        return db.Categorias.ToList();
+    }
+
+    public int Insertar(Contacto contacto)
+    {
+        using var db = new AppDbContext();
+        db.Contactos.Add(contacto);
+        return db.SaveChanges();
+    }
+
+    public int Eliminar(int id)
+    {
+        using var db = new AppDbContext();
+        var contacto = db.Contactos.Find(id);
+        if (contacto == null)
+        {
+            return 0;
+        }
+
+        db.Contactos.Remove(contacto);
+        return db.SaveChanges();
+    }
+
+    public int Actualizar(Contacto contacto)
+    {
+        using var db = new AppDbContext();
+        var existente = db.Contactos.Find(contacto.Id);
+        if (existente == null)
+        {
+            return 0;
+        }
+
+        existente.Nombre = contacto.Nombre;
+        existente.Apellido = contacto.Apellido;
+        existente.Empresa = contacto.Empresa;
+        existente.Telefono = contacto.Telefono;
+        existente.Puesto = contacto.Puesto;
+        existente.Email = contacto.Email;
+        existente.EsFavorito = contacto.EsFavorito;
+        existente.Nota = contacto.Nota;
+        existente.CategoriaId = contacto.CategoriaId;
+
+        return db.SaveChanges();
+    }
 }
